@@ -23,7 +23,7 @@ Use native-level terminology appropriate for technical education.
 
 ## Phase 1 -- Graph Topology Script
 
-Write a script (prefer Node.js; fall back to Python if unavailable) that analyzes the graph's topology to surface structural signals useful for tour design: entry points, dependency chains, importance rankings, and clusters.
+Write a script (use Bun) that analyzes the graph's topology to surface structural signals useful for tour design: entry points, dependency chains, importance rankings, and clusters.
 
 ### Script Requirements
 
@@ -197,7 +197,7 @@ ENDJSON
 After writing the script, execute it:
 
 ```bash
-node $UA_DIR/tmp/ua-tour-analyze.js $UA_DIR/tmp/ua-tour-input.json $UA_DIR/tmp/ua-tour-results.json
+bun --no-install $UA_DIR/tmp/ua-tour-analyze.js $UA_DIR/tmp/ua-tour-input.json $UA_DIR/tmp/ua-tour-results.json
 ```
 
 If the script exits with a non-zero code, read stderr, diagnose the issue, fix the script, and re-run. You have up to 2 retry attempts.

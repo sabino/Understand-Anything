@@ -9,7 +9,7 @@ Called at the end of Phase 2 of /understand. Phase 3 (ASSEMBLE REVIEW)
 then reviews the output for semantic issues the script cannot catch.
 
 Usage:
-    python merge-batch-graphs.py <project-root>
+    uv run --no-project --offline python merge-batch-graphs.py <project-root>
 
 Input/output live under the project's data dir (`.ua/`, or legacy
 `.understand-anything/` when that directory already exists):
@@ -1153,7 +1153,7 @@ def recover_imports_from_scan(
 
 def main() -> None:
     if len(sys.argv) < 2:
-        print("Usage: python merge-batch-graphs.py <project-root>", file=sys.stderr)
+        print("Usage: uv run --no-project --offline python merge-batch-graphs.py <project-root>", file=sys.stderr)
         sys.exit(1)
 
     project_root = Path(sys.argv[1]).resolve()
@@ -1360,7 +1360,9 @@ def main() -> None:
             }, indent=2, ensure_ascii=False), encoding="utf-8")
             candidate_temp.replace(candidate_path)
             validator = Path(__file__).resolve().with_name("validate-incremental-symbols.mjs")
-            result = subprocess.run(["node", str(validator), str(project_root)], check=False)
+            result = subprocess.run(
+                ["bun", "--no-install", str(validator), str(project_root)], check=False
+            )
             if result.returncode != 0:
                 sys.exit(result.returncode)
 

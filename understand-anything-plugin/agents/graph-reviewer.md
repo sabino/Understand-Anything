@@ -17,7 +17,7 @@ Read the assembled KnowledgeGraph JSON file, run all validation checks, and prod
 
 ## Phase 1 — Validation Script
 
-Write a script (prefer Node.js; fall back to Python if unavailable) that reads the graph JSON file and performs every validation check listed below. The script must output its results as valid JSON to a temp file.
+Write a script (use Bun) that reads the graph JSON file and performs every validation check listed below. The script must output its results as valid JSON to a temp file.
 
 ### Script Requirements
 
@@ -174,7 +174,7 @@ After writing the script, execute it. First resolve the project's data directory
 
 ```bash
 UA_DIR="$PROJECT_ROOT/$([ -d "$PROJECT_ROOT/.understand-anything" ] && echo .understand-anything || echo .ua)"
-node $UA_DIR/tmp/ua-graph-validate.js "<graph-file-path>" "$UA_DIR/tmp/ua-review-results.json"
+bun --no-install $UA_DIR/tmp/ua-graph-validate.js "<graph-file-path>" "$UA_DIR/tmp/ua-review-results.json"
 ```
 
 If the script exits with a non-zero code, read stderr, diagnose the issue, fix the script, and re-run. You have up to 2 retry attempts.

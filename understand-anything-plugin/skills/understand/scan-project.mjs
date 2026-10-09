@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 /**
  * scan-project.mjs
  *
@@ -26,7 +26,7 @@
  *   - Complexity estimation (project-scanner.md Step 7 thresholds)
  *
  * Usage:
- *   node scan-project.mjs <projectRoot> <outputPath>
+ *   bun --no-install scan-project.mjs <projectRoot> <outputPath>
  *     [--exclude <patterns>] [--exclude-analysis-data]
  *
  *   --exclude <patterns>  Comma-separated gitignore-style patterns to
@@ -738,7 +738,7 @@ async function main() {
 
   if (!projectRoot || !outputPath) {
     process.stderr.write(
-      'Usage: node scan-project.mjs <projectRoot> <outputPath> ' +
+      'Usage: bun --no-install scan-project.mjs <projectRoot> <outputPath> ' +
       '[--exclude <patterns>] [--exclude-analysis-data]\n',
     );
     process.exit(1);

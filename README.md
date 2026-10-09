@@ -219,6 +219,24 @@ The installer clones the repo to `~/.understand-anything/repo` and creates the r
   - macOS / Linux: `./install.sh --uninstall <platform>`
   - Windows: `& "$HOME/.understand-anything/repo/install.ps1" -Uninstall <platform>`
 
+### Codex with Bun
+
+The local Codex plugin uses Bun 1.4.2 and an isolated workspace inside `understand-anything-plugin/`.
+Install and build from that directory:
+
+```bash
+cd ~/.understand-anything/repo/understand-anything-plugin
+bun ci
+bun run build
+bun run build:dashboard
+```
+
+The Bun lockfile preserves dependency versions. Lifecycle scripts and automatic dependency installation stay disabled.
+Python helpers use `uv run --no-project --offline python` with an installed interpreter.
+
+Invoke `$understand /path/to/repo` in Codex. The dashboard uses the local Bun workspace.
+Keep these adaptations when updating this checkout from upstream.
+
 ### Cursor
 
 Cursor auto-discovers the plugin via `.cursor-plugin/plugin.json` when this repo is cloned. No manual installation needed — just clone and open in Cursor.

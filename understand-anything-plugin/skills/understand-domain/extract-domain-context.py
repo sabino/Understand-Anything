@@ -6,7 +6,7 @@ Scans a project directory and produces a structured JSON context file that the
 domain-analyzer agent uses to identify business domains, flows, and steps.
 
 Usage:
-    python extract-domain-context.py <project-root>
+    uv run --no-project --offline python extract-domain-context.py <project-root>
 
 Output:
     <ua-dir>/intermediate/domain-context.json, where <ua-dir> is `.ua/` (or
@@ -382,7 +382,7 @@ def _truncate_to_fit(context: dict[str, Any]) -> dict[str, Any]:
 
 def main() -> None:
     if len(sys.argv) < 2:
-        print("Usage: python extract-domain-context.py <project-root>", file=sys.stderr)
+        print("Usage: uv run --no-project --offline python extract-domain-context.py <project-root>", file=sys.stderr)
         sys.exit(1)
 
     project_root = Path(sys.argv[1]).resolve()

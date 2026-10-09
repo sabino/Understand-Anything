@@ -30,7 +30,7 @@ Detection signals: has `index.md` + multiple `.md` files with wikilinks. May hav
 
 2. Run the format detection script bundled with this skill:
    ```
-   python3 "<SKILL_DIR>/parse-knowledge-base.py" "<TARGET_DIR>"
+   uv run --no-project --offline python "<SKILL_DIR>/parse-knowledge-base.py" "<TARGET_DIR>"
    ```
    - If the script exits with an error, tell the user this doesn't appear to be a Karpathy-pattern wiki and explain what was expected
    - If successful, proceed. The script writes `scan-manifest.json` to `$UA_DIR/intermediate/`
@@ -74,7 +74,7 @@ Dispatch `article-analyzer` subagents to extract implicit knowledge:
 
 1. Run the merge script bundled with this skill:
    ```
-   python3 "<SKILL_DIR>/merge-knowledge-graph.py" "<TARGET_DIR>"
+   uv run --no-project --offline python "<SKILL_DIR>/merge-knowledge-graph.py" "<TARGET_DIR>"
    ```
 
 2. The script:

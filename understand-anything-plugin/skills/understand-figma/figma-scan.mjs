@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 import { writeFileSync, mkdirSync, readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { parseFileKey, FigmaApiSource, parseDocument, extractTokens, applyScreenThumbnails } from "@understand-anything/core/figma";

@@ -7,7 +7,7 @@ extracts structure from markdown files, resolves wikilinks, and derives
 categories from index.md section headings.
 
 Usage:
-    python parse-knowledge-base.py <wiki-directory>
+    uv run --no-project --offline python parse-knowledge-base.py <wiki-directory>
 
 Output:
     Writes scan-manifest.json to <wiki-directory>/<ua-dir>/intermediate/, where

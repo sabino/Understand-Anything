@@ -1,8 +1,8 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 /**
  * Finalize a prepared incremental update without another LLM pass.
  *
- * Usage: node finalize-incremental.mjs <projectRoot>
+ * Usage: bun --no-install finalize-incremental.mjs <projectRoot>
  *
  * For PARTIAL_UPDATE / ARCHITECTURE_UPDATE, reads assembled-graph.json plus
  * either the previous or regenerated layers/tour, performs deterministic
@@ -379,7 +379,7 @@ function projectMetadata(previousProject, plan, scan) {
 async function main() {
   const args = process.argv.slice(2);
   if (args.length !== 1 || args[0].startsWith('--')) {
-    throw new Error('Usage: node finalize-incremental.mjs <projectRoot>');
+    throw new Error('Usage: bun --no-install finalize-incremental.mjs <projectRoot>');
   }
   const projectRoot = realpathSync(args[0]);
   const uaDir = resolveUaDir(projectRoot);

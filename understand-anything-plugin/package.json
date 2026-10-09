@@ -4,9 +4,15 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "packageManager": "bun@1.4.2",
+  "workspaces": ["packages/*"],
+  "trustedDependencies": [],
   "scripts": {
-    "build": "tsc",
-    "test": "node -e \"console.log('skill tests live at <repo-root>/tests/skill — run via root \\`pnpm test\\`')\""
+    "build": "bun run --bun --filter @understand-anything/core build && bun run --bun build:skill",
+    "build:skill": "tsc",
+    "build:dashboard": "bun run --bun --filter @understand-anything/dashboard build",
+    "dev:dashboard": "bun run --bun --filter @understand-anything/dashboard dev",
+    "test": "bun run --bun --filter @understand-anything/core test"
   },
   "dependencies": {
     "@understand-anything/core": "workspace:*",
@@ -17,23 +23,5 @@
     "@types/node": "^22.0.0",
     "typescript": "^5.7.0",
     "vitest": "^3.1.0"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@tree-sitter-grammars/tree-sitter-kotlin",
-      "esbuild",
-      "tree-sitter-c",
-      "tree-sitter-c-sharp",
-      "tree-sitter-cpp",
-      "tree-sitter-go",
-      "tree-sitter-java",
-      "tree-sitter-javascript",
-      "tree-sitter-php",
-      "tree-sitter-python",
-      "tree-sitter-ruby",
-      "tree-sitter-rust",
-      "tree-sitter-scala",
-      "tree-sitter-typescript"
-    ]
   }
 }

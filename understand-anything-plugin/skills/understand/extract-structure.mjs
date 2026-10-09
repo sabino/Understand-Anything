@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 /**
  * extract-structure.mjs
  *
@@ -7,7 +7,7 @@
  * to replace the LLM-generated throwaway regex scripts in Phase 1.
  *
  * Usage:
- *   node extract-structure.mjs <input.json> <output.json>
+ *   bun --no-install extract-structure.mjs <input.json> <output.json>
  *
  * Input JSON:
  *   { projectRoot, batchFiles: [{path, language, sizeLines, fileCategory}], batchImportData }
@@ -63,7 +63,7 @@ const { TreeSitterPlugin, PluginRegistry, builtinLanguageConfigs, registerAllPar
 async function main() {
   const [,, inputPath, outputPath] = process.argv;
   if (!inputPath || !outputPath) {
-    process.stderr.write('Usage: node extract-structure.mjs <input.json> <output.json>\n');
+    process.stderr.write('Usage: bun --no-install extract-structure.mjs <input.json> <output.json>\n');
     process.exit(1);
   }
 

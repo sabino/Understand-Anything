@@ -482,7 +482,7 @@ const isCli = process.argv[1] && existsSync(process.argv[1])
   && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url));
 if (isCli) {
   if (process.argv.length !== 3) {
-    process.stderr.write('Usage: node validate-incremental-symbols.mjs <projectRoot>\n');
+    process.stderr.write('Usage: bun --no-install validate-incremental-symbols.mjs <projectRoot>\n');
     process.exitCode = 1;
   } else {
     try {

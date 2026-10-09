@@ -1,9 +1,9 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 /**
  * Prepare a deterministic incremental /understand update.
  *
  * Usage:
- *   node prepare-incremental.mjs <projectRoot> <baseCommit>
+ *   bun --no-install prepare-incremental.mjs <projectRoot> <baseCommit>
  *     [--exclude <comma-separated-patterns>]
  *
  * Writes under <UA_DIR>/intermediate:
@@ -467,7 +467,7 @@ function parseArgs(argv) {
   }
   if (positionals.length !== 2) {
     throw new Error(
-      'Usage: node prepare-incremental.mjs <projectRoot> <baseCommit> [--exclude <patterns>]',
+      'Usage: bun --no-install prepare-incremental.mjs <projectRoot> <baseCommit> [--exclude <patterns>]',
     );
   }
   return { projectRoot: positionals[0], baseCommit: positionals[1], excludePatterns };

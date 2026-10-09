@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 /** Prepare exactly one targeted analyzer retry after the symbol gate fails. */
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -15,7 +15,7 @@ import {
 } from './validate-incremental-symbols.mjs';
 
 async function main() {
-  if (process.argv.length !== 3) throw new Error('Usage: node prepare-symbol-retry.mjs <projectRoot>');
+  if (process.argv.length !== 3) throw new Error('Usage: bun --no-install prepare-symbol-retry.mjs <projectRoot>');
   const projectRoot = realpathSync(process.argv[2]);
   const intermediateDir = await getIntermediateDir(projectRoot);
   const { plan, baseline } = loadSymbolContext(projectRoot, intermediateDir);

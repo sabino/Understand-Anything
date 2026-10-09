@@ -70,7 +70,7 @@ The merge script's dangling-edge dropper is the safety net for genuinely unresol
 Run the bundled `extract-structure.mjs` script. The `<SKILL_DIR>` path is provided in your dispatch prompt.
 
 ```bash
-node <SKILL_DIR>/extract-structure.mjs \
+bun --no-install <SKILL_DIR>/extract-structure.mjs \
   $UA_DIR/tmp/ua-file-analyzer-input-<batchIndex>.json \
   $UA_DIR/tmp/ua-file-extract-results-<batchIndex>.json
 ```

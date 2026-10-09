@@ -22,7 +22,7 @@ Use native-level terminology. Keep established English terms when appropriate (e
 
 ## Phase 1 -- Structural Analysis Script
 
-Write a script (prefer Node.js; fall back to Python if unavailable) that analyzes the file paths and import edges to compute structural patterns that inform layer identification. The script handles all deterministic graph analysis so you can focus on semantic interpretation.
+Write a script (use Bun) that analyzes the file paths and import edges to compute structural patterns that inform layer identification. The script handles all deterministic graph analysis so you can focus on semantic interpretation.
 
 ### Script Requirements
 
@@ -316,7 +316,7 @@ ENDJSON
 After writing the script, execute it:
 
 ```bash
-node $UA_DIR/tmp/ua-arch-analyze.js $UA_DIR/tmp/ua-arch-input.json $UA_DIR/tmp/ua-arch-results.json
+bun --no-install $UA_DIR/tmp/ua-arch-analyze.js $UA_DIR/tmp/ua-arch-input.json $UA_DIR/tmp/ua-arch-results.json
 ```
 
 If the script exits with a non-zero code, read stderr, diagnose the issue, fix the script, and re-run. You have up to 2 retry attempts.

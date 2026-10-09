@@ -61,7 +61,7 @@ Resolve the project's data directory once (the legacy `.understand-anything/` wh
 ```bash
 UA_DIR="$PROJECT_ROOT/$([ -d "$PROJECT_ROOT/.understand-anything" ] && echo .understand-anything || echo .ua)"
 mkdir -p $UA_DIR/tmp
-node $PLUGIN_ROOT/skills/understand/scan-project.mjs \
+bun --no-install $PLUGIN_ROOT/skills/understand/scan-project.mjs \
   "$PROJECT_ROOT" \
   "$UA_DIR/tmp/ua-scan-files.json"
 ```
@@ -69,7 +69,7 @@ node $PLUGIN_ROOT/skills/understand/scan-project.mjs \
 With exclude patterns (add the `--exclude` flag after the output path):
 
 ```bash
-node $PLUGIN_ROOT/skills/understand/scan-project.mjs \
+bun --no-install $PLUGIN_ROOT/skills/understand/scan-project.mjs \
   "$PROJECT_ROOT" \
   "$UA_DIR/tmp/ua-scan-files.json" \
   --exclude "tests/*,docs/*"
@@ -150,7 +150,7 @@ ENDJSON
 Then run:
 
 ```bash
-node $PLUGIN_ROOT/skills/understand/extract-import-map.mjs \
+bun --no-install $PLUGIN_ROOT/skills/understand/extract-import-map.mjs \
   $UA_DIR/tmp/ua-import-map-input.json \
   $UA_DIR/tmp/ua-import-map-output.json
 ```

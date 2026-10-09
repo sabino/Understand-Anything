@@ -9,7 +9,7 @@ Handles: entity deduplication, edge normalization, layer building from
 index.md categories, tour generation from index.md section ordering.
 
 Usage:
-    python merge-knowledge-graph.py <wiki-directory>
+    uv run --no-project --offline python merge-knowledge-graph.py <wiki-directory>
 
 Output:
     Writes assembled-graph.json to <wiki-directory>/<ua-dir>/intermediate/, where

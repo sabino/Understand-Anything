@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 /**
  * extract-import-map.mjs
  *
@@ -13,7 +13,7 @@
  * inconsistent, regex-only scripts with sparse coverage).
  *
  * Usage:
- *   node extract-import-map.mjs <input.json> <output.json>
+ *   bun --no-install extract-import-map.mjs <input.json> <output.json>
  *
  * Input JSON:
  *   {
@@ -1959,7 +1959,7 @@ function extractExtraImportSources(file, content) {
 async function main() {
   const [,, inputPath, outputPath] = process.argv;
   if (!inputPath || !outputPath) {
-    process.stderr.write('Usage: node extract-import-map.mjs <input.json> <output.json>\n');
+    process.stderr.write('Usage: bun --no-install extract-import-map.mjs <input.json> <output.json>\n');
     process.exit(1);
   }
 

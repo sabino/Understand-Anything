@@ -93,7 +93,7 @@ Determine whether to run a full analysis or incremental update.
      "$HOME/.opencode/understand-anything/understand-anything-plugin" \
      "$HOME/.pi/understand-anything/understand-anything-plugin" \
      "$HOME/understand-anything/understand-anything-plugin"; do
-     if [ -n "$candidate" ] && [ -f "$candidate/package.json" ] && [ -f "$candidate/pnpm-workspace.yaml" ]; then
+     if [ -n "$candidate" ] && [ -f "$candidate/package.json" ] && [ -f "$candidate/bun.lock" ]; then
        PLUGIN_ROOT="$candidate"
        break
      fi
@@ -115,11 +115,11 @@ Determine whether to run a full analysis or incremental update.
    fi
 
    if [ ! -f "$PLUGIN_ROOT/packages/core/dist/index.js" ]; then
-     cd "$PLUGIN_ROOT" && (pnpm install --frozen-lockfile 2>/dev/null || pnpm install) && pnpm --filter @understand-anything/core build
+     cd "$PLUGIN_ROOT" && bun ci && bun run build
    fi
    ```
 
-   If `pnpm` is missing, report to the user: "Install Node.js ≥ 22 and pnpm ≥ 10, then re-run `/understand`."
+   Use the Bun version pinned in `$PLUGIN_ROOT/.bun-version`. Python helpers run through `uv` with the installed interpreter.
 
 1.7. **Resolve the data directory `$UA_DIR`.** All Understand-Anything artifacts live in the project's data directory. Resolve it once, now that `$PROJECT_ROOT` is known, and reuse `$UA_DIR` for every read and write in later phases:
    ```bash
@@ -173,7 +173,7 @@ Determine whether to run a full analysis or incremental update.
 4. **Check for subdomain knowledge graphs to merge:**
    List all `*knowledge-graph*.json` files in `$UA_DIR/` **excluding** `knowledge-graph.json` itself (e.g. `frontend-knowledge-graph.json`, `backend-knowledge-graph.json`). If any subdomain graphs exist, run the merge script bundled with this skill (located next to this SKILL.md file — use the skill directory path, not the project root):
    ```bash
-   python "<SKILL_DIR>/merge-subdomain-graphs.py" "$PROJECT_ROOT"
+   uv run --no-project --offline python "<SKILL_DIR>/merge-subdomain-graphs.py" "$PROJECT_ROOT"
    ```
    The script discovers subdomain graphs, loads the existing `knowledge-graph.json` as a base (if present), and merges everything into `knowledge-graph.json` (deduplicating nodes and edges). Report the merge summary to the user, then continue with the merged graph.
 
@@ -194,14 +194,14 @@ Determine whether to run a full analysis or incremental update.
 
    For incremental updates, do **not** construct the changed-file list by hand. Run the bundled reconciliation helper with the previous analyzed commit. Pass `--exclude "$EXCLUDE_PATTERNS"` only when the option is non-empty:
    ```bash
-   node "<SKILL_DIR>/prepare-incremental.mjs" \
+   bun --no-install "<SKILL_DIR>/prepare-incremental.mjs" \
      "$PROJECT_ROOT" \
      "$LAST_COMMIT_HASH"
    ```
 
    With explicit exclusions:
    ```bash
-   node "<SKILL_DIR>/prepare-incremental.mjs" \
+   bun --no-install "<SKILL_DIR>/prepare-incremental.mjs" \
      "$PROJECT_ROOT" \
      "$LAST_COMMIT_HASH" \
      --exclude "$EXCLUDE_PATTERNS"
@@ -218,7 +218,7 @@ Determine whether to run a full analysis or incremental update.
 
    | Prepared action | Next step |
    |---|---|
-   | `SKIP` | Run `node "<SKILL_DIR>/finalize-incremental.mjs" "$PROJECT_ROOT"`. It updates graph metadata, scan, fingerprints, and meta for cosmetic or irrelevant changes, but intentionally advances nothing for generated-artifact-only commits. Without `--review`, report zero LLM tokens spent and **STOP**. With explicit `--review`, copy `$UA_DIR/knowledge-graph.json` to `$UA_DIR/intermediate/assembled-graph.json` and jump to the `--review` graph-reviewer path in Phase 6 instead of stopping. |
+   | `SKIP` | Run `bun --no-install "<SKILL_DIR>/finalize-incremental.mjs" "$PROJECT_ROOT"`. It updates graph metadata, scan, fingerprints, and meta for cosmetic or irrelevant changes, but intentionally advances nothing for generated-artifact-only commits. Without `--review`, report zero LLM tokens spent and **STOP**. With explicit `--review`, copy `$UA_DIR/knowledge-graph.json` to `$UA_DIR/intermediate/assembled-graph.json` and jump to the `--review` graph-reviewer path in Phase 6 instead of stopping. |
    | `PARTIAL_UPDATE` | Skip Phase 0.5 and Phase 1; continue with the incremental Phase 1.5/2 path. |
    | `ARCHITECTURE_UPDATE` | Skip Phase 0.5 and Phase 1; continue with incremental analysis, then rerun Phase 4 and Phase 5. |
    | `FULL_UPDATE` | Switch to the existing full pipeline beginning at Phase 0.5. Do not patch fingerprints or metadata from the incremental helper. |
@@ -244,7 +244,7 @@ Set up and verify the `.understandignore` file before a full scan. Incremental p
 1. Check if `$UA_DIR/.understandignore` exists.
 2. **If it does NOT exist**, generate a starter file by invoking the bundled script (delegates to `generateStarterIgnoreFile` in `@understand-anything/core`, which reads `.gitignore`, deduplicates against built-in defaults, and emits language-grouped test-file suggestions). Pass `$PLUGIN_ROOT` via the env so the script doesn't have to re-derive it from its own path (which breaks for copied skill installs):
      ```bash
-     PLUGIN_ROOT="$PLUGIN_ROOT" node "<SKILL_DIR>/generate-ignore.mjs" "$PROJECT_ROOT"
+     PLUGIN_ROOT="$PLUGIN_ROOT" bun --no-install "<SKILL_DIR>/generate-ignore.mjs" "$PROJECT_ROOT"
      ```
    - Report to the user:
      > Generated `$UA_DIR/.understandignore` with suggested exclusions based on your project structure. Please review it and uncomment any patterns you'd like to exclude from analysis. When ready, confirm to continue.
@@ -309,7 +309,7 @@ Report: `[Phase 1.5/7] Computing semantic batches...`
 
 For a full analysis, run the bundled batching script:
 ```bash
-node "<SKILL_DIR>/compute-batches.mjs" "$PROJECT_ROOT"
+bun --no-install "<SKILL_DIR>/compute-batches.mjs" "$PROJECT_ROOT"
 ```
 
 For `PARTIAL_UPDATE` or `ARCHITECTURE_UPDATE`, inspect `filesToReanalyze` from the prepared plan:
@@ -318,7 +318,7 @@ For `PARTIAL_UPDATE` or `ARCHITECTURE_UPDATE`, inspect `filesToReanalyze` from t
 - Otherwise run batching against the helper-produced file, which contains only structurally changed current files:
 
   ```bash
-  node "<SKILL_DIR>/compute-batches.mjs" "$PROJECT_ROOT" \
+  bun --no-install "<SKILL_DIR>/compute-batches.mjs" "$PROJECT_ROOT" \
     --changed-files="$UA_DIR/intermediate/changed-files.json"
   ```
 
@@ -378,7 +378,7 @@ After ALL batches complete, report to the user: `Phase 2 complete. All <totalBat
 
 Run the merge-and-normalize script bundled with this skill (located next to this SKILL.md file — use the skill directory path, not the project root):
 ```bash
-python "<SKILL_DIR>/merge-batch-graphs.py" "$PROJECT_ROOT"
+uv run --no-project --offline python "<SKILL_DIR>/merge-batch-graphs.py" "$PROJECT_ROOT"
 ```
 
 This script reads all `batch-*.json` files (including `batch-<i>-part-<k>.json` produced by file-analyzers that split their output) from `$UA_DIR/intermediate/`, then in one pass:
@@ -405,7 +405,7 @@ Include the script's warnings in `$PHASE_WARNINGS` for the reviewer.
 3. Run the merge script in both cases:
 
    ```bash
-   python "<SKILL_DIR>/merge-batch-graphs.py" "$PROJECT_ROOT"
+   uv run --no-project --offline python "<SKILL_DIR>/merge-batch-graphs.py" "$PROJECT_ROOT"
    ```
 
 The merge combines `batch-existing.json` with any fresh batch output. Its import recovery reads the already-refreshed `scan-result.json`, so added and removed imports are reflected during this same run. Require a successful exit as well as `assembled-graph.json` before continuing. A failed merge can deliberately leave an incomplete candidate for diagnosis.
@@ -427,7 +427,7 @@ Go receiver methods, Rust inherent impl methods, and C++ out-of-class definition
 When the report has `unresolvedFiles`, prepare exactly one repair:
 
 ```bash
-node "<SKILL_DIR>/prepare-symbol-retry.mjs" "$PROJECT_ROOT"
+bun --no-install "<SKILL_DIR>/prepare-symbol-retry.mjs" "$PROJECT_ROOT"
 ```
 
 This helper revalidates the candidate, records attempt 1/1 for the base/head commits, removes the affected files' new nodes and outgoing edges, clears old numeric batch shards, and preserves other merged results in `batch-0.json`. Current inbound edges from other files remain candidates until merge reconciles their targets against the replacement nodes; candidates with missing targets are dropped. Dispatch only `batches[]` from `incremental-symbol-retry.json`, using each batch's `files`, `batchIndex`, `batchImportData`, `neighborMap`, `previousSymbols`, and `missingSymbols`. Use the normal file-analyzer prompt and output names. The repair must reanalyze each affected file completely, not just append missing nodes. Then rerun merge. Do not rerun prepare to obtain another retry; the attempt remains used for those commits.
@@ -630,7 +630,7 @@ Required fields: `order`, `title`, `description`, `nodeIds`. Preserve optional `
 After the applicable Phase 4/5 work is complete, finalize either incremental action:
 
 ```bash
-node "<SKILL_DIR>/finalize-incremental.mjs" "$PROJECT_ROOT"
+bun --no-install "<SKILL_DIR>/finalize-incremental.mjs" "$PROJECT_ROOT"
 ```
 
 This helper validates/deduplicates nodes and edges, reconciles layers/tour, and independently reruns the shared symbol validator on the exact graph to be saved. It then atomically saves the graph, patches only changed fingerprints while preserving all others, removes deleted fingerprints, and only then advances `meta.json`. A cached successful merge report cannot bypass the save check. If symbol loss is first detected here, use the same one-retry procedure above, rerun merge and any required architecture/tour phases, then finalize again; if the retry was already used or remains unresolved, **STOP** with the old graph and baselines intact.
@@ -683,10 +683,10 @@ Assemble the full KnowledgeGraph JSON object:
 
 #### Default path (no `--review`): inline deterministic validation
 
-Write the following Node.js script to `$UA_DIR/tmp/ua-inline-validate.cjs`:
+Write the following JavaScript validator to `$UA_DIR/tmp/ua-inline-validate.cjs`:
 
 ```javascript
-#!/usr/bin/env node
+#!/usr/bin/env bun
 const fs = require('fs');
 const graphPath = process.argv[2];
 const outputPath = process.argv[3];
@@ -753,7 +753,7 @@ try {
 
 Execute it:
 ```bash
-node "$UA_DIR/tmp/ua-inline-validate.cjs" \
+bun --no-install "$UA_DIR/tmp/ua-inline-validate.cjs" \
   "$UA_DIR/intermediate/assembled-graph.json" \
   "$UA_DIR/intermediate/review.json"
 ```
@@ -814,7 +814,7 @@ Report to the user: `[Phase 7/7] Saving knowledge graph...`
 
    Write the input file:
    ```bash
-   node - "$PROJECT_ROOT" "$UA_DIR/intermediate/fingerprint-input.json" <<'NODE'
+   bun --no-install - "$PROJECT_ROOT" "$UA_DIR/intermediate/fingerprint-input.json" <<'NODE'
    const fs = require('fs');
    const projectRoot = process.argv[2];
    const outputPath = process.argv[3];
@@ -829,7 +829,7 @@ Report to the user: `[Phase 7/7] Saving knowledge graph...`
 
    Then invoke the bundled script (located next to this SKILL.md):
    ```bash
-   node "<SKILL_DIR>/build-fingerprints.mjs" \
+   bun --no-install "<SKILL_DIR>/build-fingerprints.mjs" \
      "$UA_DIR/intermediate/fingerprint-input.json"
    ```
 

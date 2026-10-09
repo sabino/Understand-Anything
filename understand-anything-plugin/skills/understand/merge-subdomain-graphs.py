@@ -9,7 +9,7 @@ knowledge-graph.json as a base if present, and merges everything
 into a single knowledge-graph.json.
 
 Usage:
-    python merge-subdomain-graphs.py <project-root> [file1.json file2.json ...]
+    uv run --no-project --offline python merge-subdomain-graphs.py <project-root> [file1.json file2.json ...]
 
 If no files are specified, auto-discovers subdomain graphs. The main
 knowledge-graph.json is loaded as a base but never as a discovery input
@@ -311,7 +311,7 @@ def write_merge_report(
 
 def main() -> None:
     if len(sys.argv) < 2:
-        print("Usage: python merge-subdomain-graphs.py <project-root> [file1.json file2.json ...]", file=sys.stderr)
+        print("Usage: uv run --no-project --offline python merge-subdomain-graphs.py <project-root> [file1.json file2.json ...]", file=sys.stderr)
         sys.exit(1)
 
     project_root = Path(sys.argv[1]).resolve()

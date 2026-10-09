@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 /**
  * build-fingerprints.mjs
  *
@@ -14,7 +14,7 @@
  * which silently broke auto-update for every install (see issue #152).
  *
  * Usage:
- *   node build-fingerprints.mjs <input.json>
+ *   bun --no-install build-fingerprints.mjs <input.json>
  *
  * Input JSON:
  *   { projectRoot: string, filePaths: string[], gitCommitHash: string }
@@ -62,7 +62,7 @@ const {
 async function main() {
   const [, , inputPath] = process.argv;
   if (!inputPath) {
-    process.stderr.write('Usage: node build-fingerprints.mjs <input.json>\n');
+    process.stderr.write('Usage: bun --no-install build-fingerprints.mjs <input.json>\n');
     process.exit(1);
   }
 

@@ -68,7 +68,7 @@ for candidate in \
   "$HOME/.opencode/understand-anything/understand-anything-plugin" \
   "$HOME/.pi/understand-anything/understand-anything-plugin" \
   "$HOME/understand-anything/understand-anything-plugin"; do
-  if [ -n "$candidate" ] && [ -f "$candidate/package.json" ] && [ -f "$candidate/pnpm-workspace.yaml" ]; then
+  if [ -n "$candidate" ] && [ -f "$candidate/package.json" ] && [ -f "$candidate/bun.lock" ]; then
     PLUGIN_ROOT="$candidate"
     break
   fi
@@ -118,7 +118,7 @@ The preprocessing script does NOT produce a domain graph — it produces **raw m
 
 1. Run the preprocessing script bundled with this skill, passing `$PROJECT_ROOT` from Phase 0:
    ```
-   python ./extract-domain-context.py "$PROJECT_ROOT"
+   uv run --no-project --offline python ./extract-domain-context.py "$PROJECT_ROOT"
    ```
    This outputs `$UA_DIR/intermediate/domain-context.json` containing:
    - File tree (respecting `.gitignore`)

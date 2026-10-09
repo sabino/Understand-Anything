@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 /**
  * generate-ignore.mjs
  *
@@ -6,11 +6,11 @@
  * (`.ua/`, or legacy `.understand-anything/` when that directory already
  * exists — see core's resolveUaDir) by delegating to
  * `generateStarterIgnoreFile` in `@understand-anything/core`. Invoked from
- * SKILL.md Phase 0.5; replaces the inline `node -e "…"` block that previously
+ * SKILL.md Phase 0.5; replaces the inline `bun --no-install -e "…"` block that previously
  * duplicated the generator logic.
  *
  * Usage:
- *   node generate-ignore.mjs <projectRoot>
+ *   bun --no-install generate-ignore.mjs <projectRoot>
  *
  * Behaviour:
  *   - Exits 0 with a stderr notice if the target file already exists.

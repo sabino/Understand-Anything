@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 /**
  * compute-batches.mjs — Phase 1.5 of /understand
  *
@@ -6,7 +6,7 @@
  * graph, and writes batches.json containing batches + neighborMap.
  *
  * Usage:
- *   node compute-batches.mjs <project-root> [--changed-files=<path>]
+ *   bun --no-install compute-batches.mjs <project-root> [--changed-files=<path>]
  *     [--scan-result=<path>] [--output=<path>]
  *
  * Input/output live under the project's data dir (`.ua/`, or legacy
@@ -396,7 +396,7 @@ async function main() {
   const projectRoot = process.argv[2];
   if (!projectRoot) {
     process.stderr.write(
-      'Usage: node compute-batches.mjs <project-root> [--changed-files=<path>] ' +
+      'Usage: bun --no-install compute-batches.mjs <project-root> [--changed-files=<path>] ' +
       '[--scan-result=<path>] [--output=<path>]\n',
     );
     process.exit(1);
